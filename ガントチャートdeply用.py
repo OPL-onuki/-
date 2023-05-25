@@ -12,7 +12,11 @@ JSON_KEYFILE_PATH = os.getenv('JSON_Key')  # Environment variable
 
 def get_data_from_gsheet():
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-    creds_json = json.loads(JSON_KEYFILE_PATH)  # Parse the JSON string from the environment variable
+    
+    # Load JSON from the file
+    with open(JSON_KEYFILE_PATH, 'r') as f:
+        creds_json = json.load(f)  # Use json.load() instead of json.loads()
+    
     credentials = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)  # Create credentials
     gc = gspread.authorize(credentials)
     sh = gc.open_by_url(SPREADSHEET_URL)
@@ -21,6 +25,7 @@ def get_data_from_gsheet():
     df = pd.DataFrame(data[1:], columns=data[0])
     df = df.rename(columns={'readerNo.': 'readerNo', 'CardID': 'CardID', 'Process': 'Process', 'start': 'start', 'end': 'end', 'diff(second)': 'diff'})
     return df
+
 
 def process_data(df):
     df['start'] = pd.to_datetime(df['start'])
