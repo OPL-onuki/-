@@ -8,7 +8,8 @@ import os
 import json
 
 SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1BsKymbniKnSCFJAkYbflLoAjd4GzjSRC17NU-hhkFlo/edit#gid=0"
-JSON_KEYFILE_PATH = os.getenv('JSON_Key')  # Environment variable
+JSON_KEYFILE_PATH = os.getenv('JSON_Key')
+creds_json = json.loads(JSON_KEYFILE_PATH.replace('\n', '\\n'))
 
 def get_data_from_gsheet():
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
