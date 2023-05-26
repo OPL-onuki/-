@@ -4,7 +4,6 @@ gspread
 oauth2client
 datetime
 plotly
-os
 json
 toml
 google-api-python-client
