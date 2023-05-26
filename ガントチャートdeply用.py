@@ -6,10 +6,11 @@ from datetime import datetime, timedelta
 import plotly.express as px
 import os
 import json
+imoprt toml
 
 SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1BsKymbniKnSCFJAkYbflLoAjd4GzjSRC17NU-hhkFlo/edit#gid=0"
 JSON_KEYFILE_PATH = os.getenv('JSON_Key')
-creds_json = json.loads(JSON_KEYFILE_PATH.replace('\n', '\\n'))
+creds_json = json.loads(JSON_KEYFILE_PATH)
 
 def get_data_from_gsheet():
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
