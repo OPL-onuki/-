@@ -10,11 +10,12 @@ import toml
 
 SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1BsKymbniKnSCFJAkYbflLoAjd4GzjSRC17NU-hhkFlo/edit#gid=0"
 JSON_KEYFILE_PATH = os.getenv('JSON_Key')
-creds_json = json.loads(JSON_KEYFILE_PATH)
-
+with open(JSON_KEYFILE_PATH, 'r') as file:
+    creds_json = toml.load(file)
+    
 def get_data_from_gsheet():
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-    creds_json = json.loads(JSON_KEYFILE_PATH)  # Parse the JSON string from the environment variable
+# Parse the JSON string from the environment variable
     credentials = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)  # Create credentials
     gc = gspread.authorize(credentials)
     sh = gc.open_by_url(SPREADSHEET_URL)
@@ -91,4 +92,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
