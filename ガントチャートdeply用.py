@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import plotly.express as px
 import os
 import json
-impott toml
+import toml
 
 SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1BsKymbniKnSCFJAkYbflLoAjd4GzjSRC17NU-hhkFlo/edit#gid=0"
 JSON_KEYFILE_PATH = os.getenv('JSON_Key')
