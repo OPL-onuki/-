@@ -1,28 +1,29 @@
 import streamlit as st
 import pandas as pd
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
 from datetime import datetime, timedelta
 import plotly.express as px
-import os
-import json
-import toml
 
 SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1BsKymbniKnSCFJAkYbflLoAjd4GzjSRC17NU-hhkFlo/edit#gid=0"
-JSON_KEYFILE_PATH = os.getenv('JSON_Key')
-with open(JSON_KEYFILE_PATH, 'r') as file:
-    creds_json = toml.load(file)
-    
+
 def get_data_from_gsheet():
-    scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-# Parse the JSON string from the environment variable
-    credentials = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)  # Create credentials
-    gc = gspread.authorize(credentials)
-    sh = gc.open_by_url(SPREADSHEET_URL)
-    worksheet = sh.worksheet("sheet2")
-    data = worksheet.get_all_values()
-    df = pd.DataFrame(data[1:], columns=data[0])
+    service_account_info = st.secrets["gcp_service_account"]
+    credentials = service_account.Credentials.from_service_account_info(service_account_info)
+    if credentials.requires_scopes:
+        credentials = credentials.with_scopes([
+            'https://www.googleapis.com/auth/spreadsheets.readonly',
+            'https://www.googleapis.com/auth/drive'
+        ])
+
+    service = build('sheets', 'v4', credentials=credentials)
+    sheet = service.spreadsheets()
+    result = sheet.values().get(spreadsheetId=SPREADSHEET_URL, range="sheet2").execute()
+    values = result.get('values', [])
+
+    df = pd.DataFrame(values[1:], columns=values[0])
     df = df.rename(columns={'readerNo.': 'readerNo', 'CardID': 'CardID', 'Process': 'Process', 'start': 'start', 'end': 'end', 'diff(second)': 'diff'})
+
     return df
 
 def process_data(df):
