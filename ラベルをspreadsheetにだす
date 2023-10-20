@@ -112,7 +112,3 @@ driver.get(spreadsheet_url_to_open)
 
 time.sleep(2)
 
-spreadsheet_url_to_open = "https://docs.google.com/spreadsheets/d/1oh7C3II15E5p81W7Eq4wdm14PYH1cTu1pjGPmWSOinQ/edit#gid=253816276"
-driver.get(spreadsheet_url_to_open)
-
-time.sleep(2)
