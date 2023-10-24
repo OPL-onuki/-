@@ -42,11 +42,26 @@ element3 = WebDriverWait(driver, 10).until(
 driver.execute_script("arguments[0].click();", element3)
 time.sleep(2)
 
+
 # ステータスを確定させる（OKボタンを押下）
 element4 = WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div[3]/div/div/main/div/div[2]/div/table/thead/tr/th[7]/span/div[2]/ul/div/div/div[7]/button[2]'))
 )
 driver.execute_script("arguments[0].click();", element4)
+time.sleep(2)
+
+# スキャンコードをクリック
+element5 = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.XPATH, '//*[@id="txt_header7"]/div[1]'))
+)
+driver.execute_script("arguments[0].click();", element5)
+time.sleep(2)
+
+# AtoZで並べ替え
+element6 = WebDriverWait(driver, 10).until(
+     EC.presence_of_element_located((By.XPATH, '//span[contains(text(),"A to Zで並べ替え")]'))
+)
+driver.execute_script("arguments[0].click();", element6)
 time.sleep(2)
 
 
@@ -111,4 +126,5 @@ spreadsheet_url_to_open = "https://docs.google.com/spreadsheets/d/1oh7C3II15E5p8
 driver.get(spreadsheet_url_to_open)
 
 time.sleep(2)
+
 
