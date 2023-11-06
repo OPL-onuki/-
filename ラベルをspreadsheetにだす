@@ -7,6 +7,9 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import time
 
+def is_valid_data(data):
+    return not(data.startswith('3') or data.startswith('5') or '-S' in data)
+
 driver_path = R'C:\Users\sab78\OneDrive\デスクトップ\ラベル印刷\msedgedriver.exe'
 service = Service(driver_path)
 driver = webdriver.Edge(service=service)
@@ -56,10 +59,9 @@ element5 = WebDriverWait(driver, 10).until(
 )
 driver.execute_script("arguments[0].click();", element5)
 time.sleep(2)
-
 # AtoZで並べ替え
 element6 = WebDriverWait(driver, 10).until(
-     EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div[3]/div/div/main/div/div[2]/div/table/thead/tr/th[9]/span/div[2]/ul/div/div[1]/div[3]/div/span')) 
+    EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div[3]/div/div/main/div/div[2]/div/table/thead/tr/th[9]/span/div[2]/ul/div/div[1]/div[3]/div/span'))
 )
 driver.execute_script("arguments[0].click();", element6)
 time.sleep(2)
@@ -74,6 +76,7 @@ if len(rows) == 0:
     print("スタンバイ中の商品はありません")
 
 # データが存在する場合の処理
+valid_data = []
 for i, row in enumerate(rows):
     cell_xpath = f'//*[@id="table_common_master"]/table/tbody/tr[{i + 1}]/td[9]'
     cell_value = driver.find_element(By.XPATH, cell_xpath).text
@@ -82,7 +85,10 @@ for i, row in enumerate(rows):
     if not cell_value.strip():
         continue
     
-    print(cell_value)
+    # フィルタリング条件を満たすデータのみリストに追加
+    if is_valid_data(cell_value):
+        valid_data.append(cell_value)
+        print(cell_value)
 
 
 
@@ -122,9 +128,9 @@ for i, row in enumerate(rows):
 
 # time.sleep(2)
 
-spreadsheet_url_to_open = "https://docs.google.com/spreadsheets/d/1oh7C3II15E5p81W7Eq4wdm14PYH1cTu1pjGPmWSOinQ/edit#gid=253816276"
-driver.get(spreadsheet_url_to_open)
+# spreadsheet_url_to_open = "https://docs.google.com/spreadsheets/d/1oh7C3II15E5p81W7Eq4wdm14PYH1cTu1pjGPmWSOinQ/edit#gid=253816276"
+# driver.get(spreadsheet_url_to_open)
 
-time.sleep(2)
+# time.sleep(2)
 
 
